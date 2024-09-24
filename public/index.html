@@ -1,0 +1,23 @@
+<body>
+    <!-- ! this script reloads the page if something changes (works with nodemon in dev only) -->
+    <script src="/reload/reload.js"></script>
+    <h1>Cryptocurrency Info</h1>
+    <p>Choose an option:</p>
+    <ul>
+        <li>
+            <a href="/crypto?coin=bitcoin&currency=usd"
+                >View Bitcoin Price in USD</a
+            >
+        </li>
+        <li>
+            <a href="/filter?minPrice=1000"
+                >Filter Cryptocurrencies Above $1,000</a
+            >
+        </li>
+        <li>
+            <a href="/compare?coin1=bitcoin&coin2=ethereum"
+                >Compare Bitcoin and Ethereum Prices</a
+            >
+        </li>
+    </ul>
+</body>

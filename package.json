@@ -1,0 +1,22 @@
+{
+    "name": "assignment1",
+    "version": "1.0.0",
+    "description": "Assignment 1 - DW course",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js",
+        "dev": "nodemon server.js -e html,js,css"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.7.7",
+        "express": "^4.21.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7",
+        "reload": "^3.3.0"
+    }
+}
