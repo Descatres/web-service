@@ -10,6 +10,7 @@ router.get("/crypto", async (req, res) => {
     const {
         coin = "bitcoin,ethereum,cardano,binancecoin,tether,solana,xrp,dogecoin,polkadot,litecoin,chainlink,stellar,vechain,uniswap,aave,cosmos,tron,algorand,theta,tezos",
         currency = "usd",
+        resp = "html",
     } = req.query;
 
     try {
@@ -22,8 +23,18 @@ router.get("/crypto", async (req, res) => {
             (a, b) => data[b][currency] - data[a][currency]
         );
 
-        if (req.headers.accept.includes("application/json")) {
-            return res.json(sortedCoins);
+        let totalValue = 0;
+        sortedCoins.forEach((coinName) => {
+            totalValue += data[coinName][currency];
+        });
+
+        let averageValue = totalValue / sortedCoins.length;
+
+        if (
+            resp === "json" ||
+            req.headers.accept.includes("application/json")
+        ) {
+            return res.json({ sortedCoins, totalValue, averageValue, data });
         }
 
         let htmlResponse = `<h1>Cryptocurrency Prices (Ordered by Price)</h1><ul>`;
@@ -32,6 +43,13 @@ router.get("/crypto", async (req, res) => {
                 data[coinName][currency]
             } ${currency.toUpperCase()}</li>`;
         });
+        htmlResponse += `<br><strong>Total Value:</strong> ${totalValue.toFixed(
+            4
+        )} ${currency.toUpperCase()}
+        <br><strong>Average Value:</strong> ${averageValue.toFixed(
+            4
+        )} ${currency.toUpperCase()}
+        `;
         htmlResponse += `</ul>`;
 
         res.send(htmlResponse);
@@ -45,6 +63,7 @@ router.get("/filter", async (req, res) => {
         coin = "bitcoin,ethereum,cardano,binancecoin,tether,solana,xrp,dogecoin,polkadot,litecoin,chainlink,stellar,vechain,uniswap,aave,cosmos,tron,algorand,theta,tezos",
         minPrice = 0,
         currency = "usd",
+        resp = "html",
     } = req.query;
 
     try {
@@ -57,8 +76,11 @@ router.get("/filter", async (req, res) => {
             (coin) => data[coin][currency] >= minPrice
         );
 
-        if (req.headers.accept.includes("application/json")) {
-            return res.json(filteredCoins);
+        if (
+            resp === "json" ||
+            req.headers.accept.includes("application/json")
+        ) {
+            return res.json({ filteredCoins, data });
         }
 
         let text =
@@ -97,6 +119,7 @@ router.get("/compare", async (req, res) => {
         coin1 = "bitcoin",
         coin2 = "ethereum",
         currency = "usd",
+        resp = "html",
     } = req.query;
 
     const coinList = [
@@ -131,8 +154,11 @@ router.get("/compare", async (req, res) => {
         const price2 = data[coin2][currency];
         const difference = Math.abs(price1 - price2);
 
-        if (req.headers.accept.includes("application/json")) {
-            return res.json({ price1, price2, difference });
+        if (
+            resp === "json" ||
+            req.headers.accept.includes("application/json")
+        ) {
+            return res.json({ price1, price2, difference, data });
         }
 
         const htmlContent = `
@@ -184,7 +210,7 @@ router.get("/compare", async (req, res) => {
 });
 
 router.get("/top-gainers-losers", async (req, res) => {
-    const { currency = "usd" } = req.query;
+    const { currency = "usd", resp = "html" } = req.query;
 
     try {
         const response = await axios.get(
@@ -217,13 +243,13 @@ router.get("/top-gainers-losers", async (req, res) => {
                     b.price_change_percentage_24h
             )
             .slice(0, 5);
-
-        // If the request expects JSON
-        if (req.headers.accept.includes("application/json")) {
-            return res.json({ gainers, losers });
+        if (
+            resp === "json" ||
+            req.headers.accept.includes("application/json")
+        ) {
+            return res.json({ gainers, losers, data });
         }
 
-        // If the request expects HTML
         let htmlContent = `<h1>Top Gainers and Losers (Last 24 hours)</h1>
         <h2>Top 5 Gainers</h2>
         <ul>`;

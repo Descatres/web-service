@@ -20,21 +20,21 @@
     <ul>
         <li>
             <a id="view-crypto-link" href="#">
-                View Prices for Top 20 Cryptocurrencies
+                View prices for 20 cryptocurrencies
             </a>
         </li>
         <li>
             <a id="filter-crypto-link" href="#">
-                Filter Cryptocurrencies according to price
+                Filter 20 cryptocurrencies according to price
             </a>
         </li>
         <li>
             <a id="compare-crypto-link" href="#">
-                Compare Cryptocurrencies Prices
+                Compare between 20 cryptocurrencies prices
             </a>
         </li>
         <li>
-            <a id="gainers-losers-link" href="#">Top5 and Bottom5 (24h) </a>
+            <a id="gainers-losers-link" href="#">Top5 and Bottom5 (%/24h) </a>
         </li>
     </ul>
 
@@ -61,24 +61,27 @@
         function updateLinks() {
             const selectedCurrency = getSavedCurrency();
             console.log("Selected Currency: ", selectedCurrency);
+            const selectedResponse =
+                localStorage.getItem("selectedResponse") || "html";
 
             document.getElementById(
                 "view-crypto-link"
-            ).href = `/crypto?currency=${selectedCurrency}`;
+            ).href = `/crypto?currency=${selectedCurrency}&resp=${selectedResponse}`;
             document.getElementById(
                 "filter-crypto-link"
-            ).href = `/filter?minPrice=0&currency=${selectedCurrency}`;
+            ).href = `/filter?minPrice=0&currency=${selectedCurrency}&resp=${selectedResponse}`;
             document.getElementById(
                 "compare-crypto-link"
-            ).href = `/compare?coin1=bitcoin&coin2=ethereum&currency=${selectedCurrency}`;
+            ).href = `/compare?coin1=bitcoin&coin2=ethereum&currency=${selectedCurrency}&resp=${selectedResponse}`;
             document.getElementById(
                 "gainers-losers-link"
-            ).href = `/top-gainers-losers?currency=${selectedCurrency}`;
+            ).href = `/top-gainers-losers?currency=${selectedCurrency}&resp=${selectedResponse}`;
         }
 
         function selectedResponse() {
             const selectedResponse =
                 document.getElementById("response-select").value;
+            console.log("Selected Response: ", selectedResponse);
             localStorage.setItem("selectedResponse", selectedResponse);
             localStorage.setItem(
                 "responseExpiry",
