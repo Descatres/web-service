@@ -264,9 +264,9 @@ router.get("/top-gainers-losers", async (req, res) => {
       .slice(0, 5);
 
     const gainersNames = gainers.map((coin) => coin.name);
-    const gainersPrice = gainers.map((coin) => coin.current_price);
+    const gainersPrice = gainers.map((coin) => coin.current_price + currency);
     const gainersPercentage = gainers.map(
-      (coin) => coin.price_change_percentage_24h
+      (coin) => coin.price_change_percentage_24h + "%"
     );
 
     const losers = data
@@ -277,9 +277,9 @@ router.get("/top-gainers-losers", async (req, res) => {
       .slice(0, 5);
 
     const losersNames = losers.map((coin) => coin.name);
-    const losersPrice = losers.map((coin) => coin.current_price);
+    const losersPrice = losers.map((coin) => coin.current_price + currency);
     const losersPercentage = losers.map(
-      (coin) => coin.price_change_percentage_24h
+      (coin) => coin.price_change_percentage_24h + "%"
     );
 
     if (resp === "json" || req.headers.accept.includes("application/json")) {
@@ -290,7 +290,6 @@ router.get("/top-gainers-losers", async (req, res) => {
         losersNames,
         losersPrice,
         losersPercentage,
-        currency,
       });
     }
 
@@ -298,11 +297,11 @@ router.get("/top-gainers-losers", async (req, res) => {
         <h2>Top 5 Gainers</h2>
         <ul>`;
     gainers.forEach((coin) => {
-      htmlContent += `<li>${coin.name}: ${coin.price_change_percentage_24h}%</li>`;
+      htmlContent += `<li>${coin.name}(${coin.current_price}${currency}): ${coin.price_change_percentage_24h}%</li>`;
     });
     htmlContent += `</ul><h2>Top 5 Losers</h2><ul>`;
     losers.forEach((coin) => {
-      htmlContent += `<li>${coin.name}: ${coin.price_change_percentage_24h}%</li>`;
+      htmlContent += `<li>${coin.name}(${coin.current_price}${currency}): ${coin.price_change_percentage_24h}%</li>`;
     });
     htmlContent += "</ul>";
     res.send(htmlContent);
