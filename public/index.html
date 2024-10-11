@@ -1,104 +1,97 @@
 <body>
-    <!-- ! this script reloads the page if something changes (works with nodemon in dev only) -->
-    <script src="/reload/reload.js"></script>
-    <h1>Cryptocurrency Info</h1>
-    <p>
-        Select your preferred currency:
-        <select id="currency-select" onchange="saveCurrencySelection()">
-            <option value="usd">USD</option>
-            <option value="eur">EUR</option>
-        </select>
-    </p>
-    <p>
-        Select responses in JSON or HTML:
-        <select id="response-select" onchange="selectedResponse()">
-            <option value="json">JSON</option>
-            <option value="html">HTML</option>
-        </select>
-    </p>
-    <p>Choose an option:</p>
-    <ul>
-        <li>
-            <a id="view-crypto-link" href="#">
-                View prices for 20 cryptocurrencies
-            </a>
-        </li>
-        <li>
-            <a id="filter-crypto-link" href="#">
-                Filter 20 cryptocurrencies according to price
-            </a>
-        </li>
-        <li>
-            <a id="compare-crypto-link" href="#">
-                Compare between 20 cryptocurrencies prices
-            </a>
-        </li>
-        <li>
-            <a id="gainers-losers-link" href="#">Top5 and Bottom5 (%/24h) </a>
-        </li>
-    </ul>
+  <!-- ! this script reloads the page if something changes (works with nodemon in dev only) -->
+  <script src="/reload/reload.js"></script>
+  <h1>Cryptocurrency Info</h1>
+  <p>
+    Select your preferred currency:
+    <select id="currency-select" onchange="saveCurrencySelection()">
+      <option value="usd">USD</option>
+      <option value="eur">EUR</option>
+    </select>
+  </p>
+  <!-- <p>
+    Select responses in JSON or HTML:
+    <select id="response-select" onchange="selectedResponse()">
+      <option value="json">JSON</option>
+      <option value="html">HTML</option>
+    </select>
+  </p> -->
+  <p>Choose an option:</p>
+  <ul>
+    <li>
+      <a id="view-crypto-link" href="#">
+        View prices for 20 cryptocurrencies
+      </a>
+    </li>
+    <li>
+      <a id="filter-crypto-link" href="#">
+        Filter 20 cryptocurrencies according to price
+      </a>
+    </li>
+    <li>
+      <a id="compare-crypto-link" href="#">
+        Compare between 20 cryptocurrencies prices
+      </a>
+    </li>
+    <li>
+      <a id="gainers-losers-link" href="#">Top5 and Bottom5 (%/24h) </a>
+    </li>
+  </ul>
 
-    <script>
-        function saveCurrencySelection() {
-            const selectedCurrency =
-                document.getElementById("currency-select").value;
-            localStorage.setItem("selectedCurrency", selectedCurrency);
-            localStorage.setItem(
-                "currencyExpiry",
-                new Date().getTime() + 7 * 24 * 60 * 60 * 1000
-            );
-            updateLinks();
-        }
+  <script>
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    function saveCurrencySelection() {
+      const selectedCurrency = document.getElementById("currency-select").value;
+      localStorage.setItem("selectedCurrency", selectedCurrency);
+      localStorage.setItem("currencyExpiry", new Date().getTime() + sevenDays);
+      updateLinks();
+    }
 
-        function getSavedCurrency() {
-            const expiryTime = localStorage.getItem("currencyExpiry");
-            if (!expiryTime || new Date().getTime() > expiryTime) {
-                return "usd";
-            }
-            return localStorage.getItem("selectedCurrency") || "usd";
-        }
+    function getSavedCurrency() {
+      const expiryTime = localStorage.getItem("currencyExpiry");
+      if (!expiryTime || new Date().getTime() > expiryTime) {
+        return "usd";
+      }
+      return localStorage.getItem("selectedCurrency") || "usd";
+    }
 
-        function updateLinks() {
-            const selectedCurrency = getSavedCurrency();
-            console.log("Selected Currency: ", selectedCurrency);
-            const selectedResponse =
-                localStorage.getItem("selectedResponse") || "html";
+    function updateLinks() {
+      const selectedCurrency = getSavedCurrency();
+      //   console.log("Selected Currency: ", selectedCurrency);
+      const selectedResponse =
+        localStorage.getItem("selectedResponse") || "html";
 
-            document.getElementById(
-                "view-crypto-link"
-            ).href = `/crypto?currency=${selectedCurrency}&resp=${selectedResponse}`;
-            document.getElementById(
-                "filter-crypto-link"
-            ).href = `/filter?minPrice=0&currency=${selectedCurrency}&resp=${selectedResponse}`;
-            document.getElementById(
-                "compare-crypto-link"
-            ).href = `/compare?coin1=bitcoin&coin2=ethereum&currency=${selectedCurrency}&resp=${selectedResponse}`;
-            document.getElementById(
-                "gainers-losers-link"
-            ).href = `/top-gainers-losers?currency=${selectedCurrency}&resp=${selectedResponse}`;
-        }
+      document.getElementById(
+        "view-crypto-link"
+      ).href = `/crypto?currency=${selectedCurrency}&resp=${selectedResponse}`;
+      document.getElementById(
+        "filter-crypto-link"
+      ).href = `/filter?minPrice=0&currency=${selectedCurrency}&resp=${selectedResponse}`;
+      document.getElementById(
+        "compare-crypto-link"
+      ).href = `/compare?coin1=bitcoin&coin2=ethereum&currency=${selectedCurrency}&resp=${selectedResponse}`;
+      document.getElementById(
+        "gainers-losers-link"
+      ).href = `/top-gainers-losers?currency=${selectedCurrency}&resp=${selectedResponse}`;
+    }
 
-        function selectedResponse() {
-            const selectedResponse =
-                document.getElementById("response-select").value;
-            console.log("Selected Response: ", selectedResponse);
-            localStorage.setItem("selectedResponse", selectedResponse);
-            localStorage.setItem(
-                "responseExpiry",
-                new Date().getTime() + 7 * 24 * 60 * 60 * 1000
-            );
-        }
+    function selectedResponse() {
+      const selectedResponse = document.getElementById("response-select").value;
+      //   console.log("Selected Response: ", selectedResponse);
+      localStorage.setItem("selectedResponse", selectedResponse);
+      localStorage.setItem("responseExpiry", new Date().getTime() + sevenDays);
+    }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const savedCurrency = getSavedCurrency();
-            document.getElementById("currency-select").value = savedCurrency;
-            updateLinks();
-            console.log("Page Loaded with Currency: ", savedCurrency);
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedCurrency = getSavedCurrency();
+      document.getElementById("currency-select").value = savedCurrency;
+      updateLinks();
+      //   console.log("Page Loaded with Currency: ", savedCurrency);
+    });
 
-        const savedResponse = localStorage.getItem("selectedResponse");
-        if (savedResponse) {
-            document.getElementById("response-select").value = savedResponse;
-        }
-    </script>
+    // const savedResponse = localStorage.getItem("selectedResponse");
+    // if (savedResponse) {
+    //   document.getElementById("response-select").value = savedResponse;
+    // }
+  </script>
 </body>

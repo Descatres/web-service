@@ -1,5 +1,5 @@
 const express = require("express");
-var reload = require("reload");
+const reload = require("reload");
 const path = require("path");
 const app = express();
 const routes = require("./routes/routes");
@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", routes);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 reload(app);
